@@ -1,9 +1,9 @@
 
 public class State {
 	private String q;
-	private char input;
+	private String input;
 	
-	public State(String q, char input){
+	public State(String q, String input){
 		this.q = q;
 		this.input = input;
 	}
@@ -12,20 +12,20 @@ public class State {
 		return q;
 	}
 	
-	public char getInput(){
+	public String getInput(){
 		return input;
 	}
 	
 	@Override
 	public boolean equals(Object o){
 		if( o instanceof State){
-			return(this.q.equals(((State) o).getState()) && this.input == ((State) o).getInput());
+			return(this.q.equals(((State) o).getState()) && this.input.equals(((State) o).getInput()));
 		}
 		return false;
 	} 
 	
 	@Override public int hashCode() {
-        return (41 * (41 + getState().length()) + 7 * getInput());
+        return (41 * (41 + getState().length()) + getInput().length());
     }
 	
 }

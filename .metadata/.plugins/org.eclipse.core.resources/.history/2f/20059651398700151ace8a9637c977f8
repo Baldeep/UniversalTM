@@ -1,0 +1,29 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+
+	public static void main(String[] args) {
+		State s1 = new State("q1", "1");
+		State s2 = new State("q2", "2");
+		State s3 = new State("q1", "1");
+		State s4 = new State("q1", "1");
+		State s5 = new State("q1", "1");
+		State s6 = new State("q1", "1");
+		
+		Map<State, Integer> map = new HashMap<>();
+		map.put(s1, 1);
+		map.put(s2, 2);
+		
+		System.out.println("contains: " + map.containsKey(s3));
+		System.out.println("get: " + map.get(s3));
+		
+		System.out.println("contains 4: " + map.containsKey(s4));
+		System.out.println("get 4: " + map.get(s4));
+		System.out.println("contains 5: " + map.containsKey(s5));
+		System.out.println("get: " + map.get(s5));
+		System.out.println("contains 6: " + map.containsKey(s6));
+		System.out.println("get: " + map.get(s6));
+	}
+
+}
