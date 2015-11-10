@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class Parser {
 	private String qacc;
 	private String qrej;
 	
-	public Parser(String input) throws InvalidTMFormat{
+	public Parser(String input){
 		parse(input);
 		qs = new ArrayList<String>();
 		sigma = new ArrayList<Character>();
@@ -31,41 +30,32 @@ public class Parser {
 		delta = new HashMap<State, NextState>();
 	}
 	
-	private void setInput(String input){
-		
-	}
-	
-	private void parse(String input) throws InvalidTMFormat{
+	private void parse(String input){
 		String[] split = input.split("-");
 		for(int i=0; i < split.length; i++){
 			System.out.println(split[i]);
 		}
-		qs = getStringArray(split[0]);
-		sigma = getCharArray(split[1]);
-		rho = getCharArray(split[2]);
+		qs = Arrays.asList(getStringArray(split[0]));
+		
 	}
 	
-	private List<String> getStringArray(String input){
+	private String[] getStringArray(String input){
 		String[] qs = input.substring(1, input.length()-1).split(",");
-		return Arrays.asList(qs);
+		return qs;
 	}
 	
-	private List<Character> getCharArray(String input) throws InvalidTMFormat{
-		List<Character> chars = new ArrayList<>();
-		
-		List<String> parsed = getStringArray(input);
-		
-		for(int i = 0; i < parsed.size(); i++){
-			if(parsed.get(i).length() == 1){
-				chars.add(parsed.get(i).charAt(0));
-			} else if(parsed.get(i).contains(" ")){
-				throw new InvalidTMFormat("Wrong format at Sigma[" + i 
-						+ "]: cannot have spaces");
+	private Character[] getCharArray(String input){
+		Character[] chars = null;
+		String[] parsed = getStringArray(input);
+		for(int i = 0; i < parsed.length; i++){
+			if(parsed.length == 1){
+				char x = parsed[1].charAt(0);
 			} else {
 				throw new InvalidTMFormat("Wrong format at Sigma[" + i 
-						+ "]: can only be length of 1, is " + parsed.get(i).length());
-			}	
+						+ "]: can only be length of 1, is");
+			}
 		}
+		
 		
 		return chars;
 	}
