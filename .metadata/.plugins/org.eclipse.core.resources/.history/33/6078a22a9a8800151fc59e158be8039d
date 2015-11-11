@@ -31,46 +31,8 @@ public class Parser {
 		delta = new HashMap<State, NextState>();
 	}
 	
-	public void setInput(String input) throws InvalidTMFormat{
+	private void setInput(String input) throws InvalidTMFormat{
 		parse(input);
-	}
-	
-	public List<String> getQ(){
-		return qs;
-	}
-	
-	public List<Character> getInputAlphabet(){
-		return sigma;
-	}
-	
-	public List<Character> getMachineAlphabet(){
-		return gamma;
-	}
-	
-	public Map<State, NextState> getStateTransitions(){
-		return delta;
-	}
-	
-	public String getQ1(){
-		return q1;
-	}
-	
-	public String getQacc(){
-		return qacc;
-	}
-	
-	public String getQrej(){
-		return qrej;
-	}
-	
-	public void printTM(){
-		System.out.println("Q: " + qs);
-		System.out.println("\u03A3: " + sigma);
-		System.out.println("\u0393: " + gamma);
-		System.out.println(": " +delta.toString());
-		System.out.println("q1: " + q1);
-		System.out.println("qacc: " + qacc);
-		System.out.println("qrej: " + qrej);
 	}
 	
 	private void parse(String input) throws InvalidTMFormat{
@@ -94,6 +56,14 @@ public class Parser {
 		qrej = split[6];
 	}
 	
+	public void printTM(){
+		System.out.println("Q: " + qs);
+		System.out.println("\u03A3: " + sigma);
+		System.out.println("\u0393: " + gamma);
+		System.out.println("q1: " + q1);
+		System.out.println("qacc: " + qacc);
+		System.out.println("qrej: " + qrej);
+	}
 	
 	private List<String> getStringArray(String input) throws InvalidTMFormat{
 		String[] qs = input.substring(1, input.length()-1).split(",");
@@ -126,47 +96,20 @@ public class Parser {
 		return chars;
 	}
 	
-	private Map<State, NextState> getStateMap(String input) throws InvalidTMFormat{
+	private Map<State, NextState> getStateMap(String input){
 		Map<State, NextState> map = new HashMap<>();
-		
 		String[] parsed = input.substring(1, input.length()-1).split(";");
-		
 		for(int i=0; i < parsed.length; i++){
+			System.out.println(parsed[i]);
 			String[] temp = parsed[i].split("=");
-			String[] state = temp[0].substring(2, temp[0].length()-1).split(",");
-			String[] nextState = temp[1].substring(1, temp[1].length()-1).split(",");
-
-			// Check state for '='
-			if(temp.length != 2)
-				throw new InvalidTMFormat("Wrong state format at state " + i + ": too many '='");
-		
-			// Check the strings contain the right number of things
-			if(temp.length != 2 || state.length != 2 || nextState.length != 3)
-				throw new InvalidTMFormat("Wrong state format at state " + i);
-			
-			// D(q1, E), ensure E is a char
-			if(state[1].length() != 1)
-				throw new InvalidTMFormat("Alphabet not char " + i);
-			State st = new State(state[0], state[1].charAt(0));
-			
-			// D=(q1, E, Dir), ensure E is a char
-			if(nextState[1].length() != 1)
-				throw new InvalidTMFormat("Alphabet not char " + i);
-			// D=(q1, E, Dir), ensure Dir is a char
-			if(nextState[2].length() != 1)
-				throw new InvalidTMFormat("Wrong format at state " + i + ": direction can only be a char");
-			Direction dir; 
-			if(nextState[2].charAt(0) == 'R')
-				dir = Direction.R;
-			else if(nextState[2].charAt(0) == 'L')
-				dir = Direction.L;
-			else
-				throw new InvalidTMFormat("Wrong format at state " + i + ": direction can only be 'R' or 'L'");
-			
-			NextState ns = new NextState(nextState[0], nextState[1].charAt(0), dir);
-			
-			map.put(st, ns);
+			String[] state = temp[0].substring(2, temp[0].length()).split(",");
+			for(String s : state)
+				System.out.println(s);
+			String[] nextState = temp[1].substring(1, temp[1].length()).split(",");
+			for(String s : nextState)
+				System.out.println(s);
 		}
+		
 		
 		return map;
 	}
