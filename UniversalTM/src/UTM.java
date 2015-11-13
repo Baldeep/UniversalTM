@@ -1,7 +1,11 @@
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class UTM {
+	
+	private static int LIMIT = 200;
+	
 	public static void main(String[] args) {
 		try {
 			// Enter Input
@@ -12,16 +16,20 @@ public class UTM {
 			List<String> qs = p.getQ();
 			List<Character> sigma = p.getInputAlphabet();
 			List<Character> gamma = p.getMachineAlphabet();
-			Map<State, NextState> delta = p.getStateTransitions();
+			HashMap<State, NextState> delta = (HashMap<State, NextState>) p.getStateTransitions();
+			System.out.println("recieved" + delta);
 			String q1 = p.getQ1();
 			String qacc = p.getQacc();
 			String qrej = p.getQrej();	
 		
-			String input = "0010010101";
 			
-			String q = q1;
+			int lim = 0;
+			
+			String input = "0010010101";
 			char[] in = input.toCharArray();
-			while(q != qacc || q != qrej){
+			String q = q1;
+			
+			while(!q.equals(qacc) && !q.equals(qrej)){
 				int pointer = 0;
 				// check that the string isn't finished.
 				char c = in[pointer];
@@ -29,7 +37,17 @@ public class UTM {
 					in = appendString(in);
 					c = in[pointer];
 				}
+				
+				lim++;
+				if(lim > LIMIT){
+					q = qrej;
+				}
 			}
+			
+			if(q.equals(qacc))
+				System.out.println("accept");
+			else
+				System.out.println("reject");
 		
 		} catch (InvalidTMFormat e) {
 			e.printStackTrace();
@@ -39,7 +57,8 @@ public class UTM {
 	public static char[] appendString(char[] in){
 		String input = in.toString();
 		for(int i = 0; i < 20; i++)
-			input += " ";
+			input += "_";
 		return input.toCharArray();
 	}
+	
 }

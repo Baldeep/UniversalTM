@@ -24,15 +24,17 @@ public class Parser {
 	private String qrej;
 	
 	public Parser(String input) throws InvalidTMFormat{
+//		qs = new ArrayList<String>();
+//		sigma = new ArrayList<Character>();
+//		gamma = new ArrayList<Character>();
+//		delta = new HashMap<State, NextState>();
 		parse(input);
-		qs = new ArrayList<String>();
-		sigma = new ArrayList<Character>();
-		gamma = new ArrayList<Character>();
-		delta = new HashMap<State, NextState>();
+		printTM();
 	}
 	
 	public void setInput(String input) throws InvalidTMFormat{
 		parse(input);
+		printTM();
 	}
 	
 	public List<String> getQ(){
@@ -48,6 +50,8 @@ public class Parser {
 	}
 	
 	public Map<State, NextState> getStateTransitions(){
+		System.out.println("Passing through" + delta);
+		printDelta(delta);
 		return delta;
 	}
 	
@@ -67,11 +71,19 @@ public class Parser {
 		System.out.println("Q: " + qs);
 		System.out.println("\u03A3: " + sigma);
 		System.out.println("\u0393: " + gamma);
-		System.out.println(": " +delta.toString());
+		System.out.println("\u03B4:"); printDelta(delta);
 		System.out.println("q1: " + q1);
 		System.out.println("qacc: " + qacc);
 		System.out.println("qrej: " + qrej);
 	}
+	
+	private void printDelta(Map<State, NextState> map){
+		for(Map.Entry<State, NextState> m : map.entrySet()){
+			System.out.println("\u03B4(" + m.getKey().getState() + "," + m.getKey().getInput() 
+					+ ")=(" + m.getValue().getState() + "," + m.getValue().getOutput() + "," + m.getValue().getDirection() + ");");			
+		}
+	}
+	
 	
 	private void parse(String input) throws InvalidTMFormat{
 		String[] split = input.split("-");
@@ -81,14 +93,15 @@ public class Parser {
 					+ split.length + "-uple");
 		}
 		
-		for(int i=0; i < split.length; i++){
-			System.out.println(split[i]);
-		}
+//		for(int i=0; i < split.length; i++){
+//			System.out.println(split[i]);
+//		}
 		
 		qs = getStringArray(split[0]);		
 		sigma = getCharArray(split[1]);		
 		gamma = getCharArray(split[2]);	
 		delta = getStateMap(split[3]);
+		System.out.println("setting" + delta);
 		q1 = split[4];	
 		qacc = split[5];
 		qrej = split[6];
