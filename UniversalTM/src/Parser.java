@@ -28,14 +28,33 @@ public class Parser {
 //		sigma = new ArrayList<Character>();
 //		gamma = new ArrayList<Character>();
 //		delta = new HashMap<State, NextState>();
-		parse(input);
+		setInput(input);
 		printTM();
 	}
 	
 	public void setInput(String input) throws InvalidTMFormat{
-		parse(input);
-		printTM();
+		String[] split = input.split("-");
+		
+		if(split.length != 7){
+			throw new InvalidTMFormat("String must be a 7-uple, is a " 
+					+ split.length + "-uple");
+		}
+		
+//		for(int i=0; i < split.length; i++){
+//			System.out.println(split[i]);
+//		}
+		
+		qs = getStringArray(split[0]);		
+		sigma = getCharArray(split[1]);		
+		gamma = getCharArray(split[2]);	
+		delta = getStateMap(split[3]);
+		q1 = split[4];	
+		qacc = split[5];
+		qrej = split[6];
+		if(!qs.contains(q1)||!qs.contains(qacc)||!qs.contains(qrej))
+			throw new InvalidTMFormat("Wrong starting, accepting, rejecting state: states must be in set Q");
 	}
+	
 	
 	public List<String> getQ(){
 		return qs;
@@ -50,8 +69,6 @@ public class Parser {
 	}
 	
 	public Map<State, NextState> getStateTransitions(){
-		System.out.println("Passing through" + delta);
-		printDelta(delta);
 		return delta;
 	}
 	
@@ -84,30 +101,6 @@ public class Parser {
 		}
 	}
 	
-	
-	private void parse(String input) throws InvalidTMFormat{
-		String[] split = input.split("-");
-		
-		if(split.length != 7){
-			throw new InvalidTMFormat("String must be a 7-uple, is a " 
-					+ split.length + "-uple");
-		}
-		
-//		for(int i=0; i < split.length; i++){
-//			System.out.println(split[i]);
-//		}
-		
-		qs = getStringArray(split[0]);		
-		sigma = getCharArray(split[1]);		
-		gamma = getCharArray(split[2]);	
-		delta = getStateMap(split[3]);
-		System.out.println("setting" + delta);
-		q1 = split[4];	
-		qacc = split[5];
-		qrej = split[6];
-	}
-	
-	
 	private List<String> getStringArray(String input) throws InvalidTMFormat{
 		String[] qs = input.substring(1, input.length()-1).split(",");
 		for(int i = 0; i < qs.length; i++){
@@ -125,11 +118,8 @@ public class Parser {
 		List<String> parsed = getStringArray(input);
 		
 		for(int i = 0; i < parsed.size(); i++){
-			if(parsed.get(i).length() == 1){
-				chars.add(parsed.get(i).charAt(0));
-			} else if(parsed.get(i).contains(" ")){
-				throw new InvalidTMFormat("Wrong format at Sigma or Gamma [" + i 
-						+ "]: cannot have spaces");
+			if(parsed.get(i).trim().length() == 1){
+				chars.add(parsed.get(i).trim().charAt(0));
 			} else {
 				throw new InvalidTMFormat("Wrong format at Sigma or Gamma [" + i 
 						+ "]: can only be length of 1, is " + parsed.get(i).length());
@@ -149,32 +139,36 @@ public class Parser {
 			String[] state = temp[0].substring(2, temp[0].length()-1).split(",");
 			String[] nextState = temp[1].substring(1, temp[1].length()-1).split(",");
 
+			// state[state, char]; next state[state, char, dir]
+			if(!qs.contains(state[0]) || !qs.contains(nextState[0]))
+				throw new InvalidTMFormat("Wrong state format at state " + (i+1) + ": state isn't in set Q");
+			
 			// Check state for '='
 			if(temp.length != 2)
-				throw new InvalidTMFormat("Wrong state format at state " + i + ": too many '='");
+				throw new InvalidTMFormat("Wrong state format at state " + (i+1) + ": too many '='");
 		
 			// Check the strings contain the right number of things
 			if(temp.length != 2 || state.length != 2 || nextState.length != 3)
-				throw new InvalidTMFormat("Wrong state format at state " + i);
+				throw new InvalidTMFormat("Wrong state format at state " + (i+1));
 			
 			// D(q1, E), ensure E is a char
 			if(state[1].length() != 1)
-				throw new InvalidTMFormat("Alphabet not char " + i);
+				throw new InvalidTMFormat("Alphabet not char " + (i+1));
 			State st = new State(state[0], state[1].charAt(0));
 			
 			// D=(q1, E, Dir), ensure E is a char
 			if(nextState[1].length() != 1)
-				throw new InvalidTMFormat("Alphabet not char " + i);
+				throw new InvalidTMFormat("Alphabet not char " + (i+1));
 			// D=(q1, E, Dir), ensure Dir is a char
 			if(nextState[2].length() != 1)
-				throw new InvalidTMFormat("Wrong format at state " + i + ": direction can only be a char");
+				throw new InvalidTMFormat("Wrong format at state " + (i+1) + ": direction can only be a char");
 			Direction dir; 
 			if(nextState[2].charAt(0) == 'R')
 				dir = Direction.R;
 			else if(nextState[2].charAt(0) == 'L')
 				dir = Direction.L;
 			else
-				throw new InvalidTMFormat("Wrong format at state " + i + ": direction can only be 'R' or 'L'");
+				throw new InvalidTMFormat("Wrong format at state " + (i+1) + ": direction can only be 'R' or 'L'");
 			
 			NextState ns = new NextState(nextState[0], nextState[1].charAt(0), dir);
 			
