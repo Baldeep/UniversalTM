@@ -8,12 +8,15 @@ public class UTM {
 
 	public static void main(String[] args) {
 		try {
+			
+			String input = "00000";
 
 			String tm = "{q0,q1,q2,qa,qr}-{1}-{1,_}-{"
 					+ "D(q0,0)=(q0,0,R);D(q0,1)=(q1,1,R);D(q0,_)=(qr,_,R);"
 					+ "D(q1,0)=(q2,0,R);D(q1,1)=(q1,1,R);D(q1,_)=(qr,_,R);"
 					+ "D(q2,0)=(q2,0,R);D(q2,1)=(qr,1,R);D(q2,_)=(qa,_,R)}-q0-qa-qr";
 
+			// TM M2 accepts A = {0^2^n | n = 0, 1, 2, 3}
 			String tm1 = "{q1,q2,q3,q4,q5,qacc,qrej}-{0}-{0,X,_}-{"
 					+ "D(q1,0)=(q2,_,R);D(q1,X)=(qrej,X,R);D(q1,_)=(qrej,_,R);"
 					+ "D(q2,0)=(q3,X,R);D(q2,X)=(q2,X,R);D(q2,_)=(qacc,_,R);"
@@ -37,7 +40,6 @@ public class UTM {
 
 			int lim = 0;
 
-			String input = "00000";
 			char[] in = inputToArray(input);
 			String q = q1;
 			int pointer = 0;
