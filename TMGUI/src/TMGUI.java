@@ -6,8 +6,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.custom.ScrolledComposite;
 
 public class TMGUI extends Composite {
+	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 
 	/**
 	 * Create the composite.
@@ -16,7 +25,21 @@ public class TMGUI extends Composite {
 	 */
 	public TMGUI(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new GridLayout(3, false));
+		setLayout(new GridLayout(5, false));
+		new Label(this, SWT.NONE);
+		
+		Button btnNewButton = new Button(this, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
+		btnNewButton.setText("Load");
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
@@ -28,6 +51,15 @@ public class TMGUI extends Composite {
 		
 		Label lblNewLabel_1 = new Label(this, SWT.NONE);
 		lblNewLabel_1.setText("New Label");
+		
+		Label label_1 = new Label(this, SWT.SEPARATOR | SWT.VERTICAL);
+		GridData gd_label_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 6);
+		gd_label_1.heightHint = 145;
+		gd_label_1.widthHint = 17;
+		label_1.setLayoutData(gd_label_1);
+		
+		Label lblNewLabel_9 = formToolkit.createLabel(this, "Delta:", SWT.NONE);
+		lblNewLabel_9.setBackground(SWTResourceManager.getColor(240, 240, 240));
 		new Label(this, SWT.NONE);
 		
 		Label lblu = new Label(this, SWT.NONE);
@@ -36,6 +68,12 @@ public class TMGUI extends Composite {
 		
 		Label lblNewLabel_2 = new Label(this, SWT.NONE);
 		lblNewLabel_2.setText("New Label");
+		
+		List list = new List(this, SWT.BORDER);
+		GridData gd_list = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 5);
+		gd_list.heightHint = 119;
+		gd_list.widthHint = 126;
+		list.setLayoutData(gd_list);
 		new Label(this, SWT.NONE);
 		
 		Label lblu_1 = new Label(this, SWT.NONE);
@@ -72,6 +110,8 @@ public class TMGUI extends Composite {
 		new Label(this, SWT.NONE);
 		
 		Label label = new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
 
 	}
 
