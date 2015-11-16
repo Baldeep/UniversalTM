@@ -22,6 +22,7 @@ public class Parser {
 	private String q1;
 	private String qacc;
 	private String qrej;
+	private String input = null;
 	
 	public Parser(String input) throws InvalidTMFormat{
 //		qs = new ArrayList<String>();
@@ -32,11 +33,15 @@ public class Parser {
 		printTM();
 	}
 	
+	public Parser(){
+		
+	}
+	
 	public void setInput(String input) throws InvalidTMFormat{
 		String[] split = input.split("-");
 		
-		if(split.length != 7){
-			throw new InvalidTMFormat("String must be a 7-uple, is a " 
+		if(split.length != 7 && split[7] == null){
+			throw new InvalidTMFormat("TM must be a 7-uple, is a " 
 					+ split.length + "-uple");
 		}
 		
@@ -51,10 +56,15 @@ public class Parser {
 		q1 = split[4];	
 		qacc = split[5];
 		qrej = split[6];
+		if(split.length == 8)
+			input = split[7];
 		if(!qs.contains(q1)||!qs.contains(qacc)||!qs.contains(qrej))
-			throw new InvalidTMFormat("Wrong starting, accepting, rejecting state: states must be in set Q");
+			throw new InvalidTMFormat("Wrong starting, accepting, rejecting state: states must be in set Q");	
 	}
 	
+	public String getInput(){
+		return input;
+	}
 	
 	public List<String> getQ(){
 		return qs;
@@ -136,8 +146,10 @@ public class Parser {
 		
 		for(int i=0; i < parsed.length; i++){
 			String[] temp = parsed[i].split("=");
+			try{
 			String[] state = temp[0].substring(2, temp[0].length()-1).split(",");
 			String[] nextState = temp[1].substring(1, temp[1].length()-1).split(",");
+			
 
 			// state[state, char]; next state[state, char, dir]
 			if(!qs.contains(state[0]) || !qs.contains(nextState[0]))
@@ -173,6 +185,9 @@ public class Parser {
 			NextState ns = new NextState(nextState[0], nextState[1].charAt(0), dir);
 			
 			map.put(st, ns);
+			} catch (StringIndexOutOfBoundsException e){
+				throw new InvalidTMFormat("Check String format in state transitions");
+			}
 		}
 		
 		return map;
